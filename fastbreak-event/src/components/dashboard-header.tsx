@@ -38,7 +38,10 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               </Button>
             </Link>
 
-            <form action={signOut}>
+            <form action={async () => {
+              'use server'
+              await signOut()
+            }}>
               <Button type="submit" variant="outline" className="border-[#17f2e3]/30 text-gray-300 hover:bg-[#17f2e3]/10 hover:text-white">
                 Sign out
               </Button>
