@@ -1,103 +1,219 @@
-import Image from "next/image";
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Calendar, MapPin, Users, Zap, Trophy, Star } from "lucide-react"
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800">
+      {/* Video Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover opacity-20"
+        >
+          <source src="/videos/Fastbreak-Background-Video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-gray-800/90" />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      {/* Header */}
+      <header className="container mx-auto px-4 py-6">
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/FastbreakAI.svg"
+              alt="Fastbreak AI"
+              width={50}
+              height={50}
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            <span className="text-2xl font-black text-[#17f2e3]">
+              Fastbreak AI
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <Link href="/login">
+              <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-white/10">
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button className="bg-[#17f2e3] hover:bg-[#13cfc2] text-gray-900 font-semibold">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <main className="container mx-auto px-4">
+        <section className="py-20 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">
+              Manage Sports Events{" "}
+              <span className="text-[#17f2e3]">Like a Pro</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto">
+              Create, organize, and manage sports events with ease. 
+              Built for teams, leagues, and athletes in Charlotte.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/signup">
+                <Button size="lg" className="bg-[#17f2e3] hover:bg-[#13cfc2] text-gray-900 font-bold text-lg px-8 py-6">
+                  Start Free Today
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button size="lg" variant="outline" className="border-[#17f2e3]/30 text-white hover:bg-[#17f2e3]/10 text-lg px-8 py-6">
+                  View Dashboard Demo
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20">
+          <h2 className="text-4xl font-black text-center text-white mb-12">
+            Everything You Need
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Feature 1 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <Calendar className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Easy Scheduling
+              </h3>
+              <p className="text-gray-300">
+                Create and manage sports events with intuitive date and time selection. Never miss a game day.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <MapPin className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Venue Management
+              </h3>
+              <p className="text-gray-300">
+                Add multiple venues, track capacity, and manage locations all in one place.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <Users className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Team Collaboration
+              </h3>
+              <p className="text-gray-300">
+                Share events, coordinate with teammates, and keep everyone in the loop effortlessly.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <Zap className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Lightning Fast
+              </h3>
+              <p className="text-gray-300">
+                Built with modern technology for speed and reliability. Access your events anywhere, anytime.
+              </p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <Trophy className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Multi-Sport Support
+              </h3>
+              <p className="text-gray-300">
+                Basketball, tennis, soccer, and more. Manage all your sports in one unified platform.
+              </p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
+              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                <Star className="w-8 h-8 text-[#17f2e3]" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Custom Branding
+              </h3>
+              <p className="text-gray-300">
+                Upload event posters, customize details, and make each event uniquely yours.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 text-center">
+          <div className="bg-white/5 backdrop-blur-md p-12 rounded-2xl border border-[#17f2e3]/20 max-w-4xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Join hundreds of sports organizers in Charlotte already using Fastbreak AI
+            </p>
+            <Link href="/signup">
+              <Button size="lg" className="bg-[#17f2e3] hover:bg-[#13cfc2] text-gray-900 font-bold text-xl px-12 py-7">
+                Create Your Free Account
+              </Button>
+            </Link>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-8 mt-20">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/FastbreakAI.svg"
+                alt="Fastbreak AI"
+                width={30}
+                height={30}
+              />
+              <span className="text-sm text-gray-400">
+                © 2025 Fastbreak AI. All rights reserved.
+              </span>
+            </div>
+            
+            <div className="flex gap-6">
+              <Link href="/dashboard" className="text-sm text-gray-400 hover:text-[#17f2e3] transition-colors">
+                Dashboard
+              </Link>
+              <Link href="/login" className="text-sm text-gray-400 hover:text-[#17f2e3] transition-colors">
+                Sign In
+              </Link>
+              <Link href="/signup" className="text-sm text-gray-400 hover:text-[#17f2e3] transition-colors">
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
