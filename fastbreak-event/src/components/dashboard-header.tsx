@@ -1,7 +1,11 @@
-import { signOut } from '../../actions/auth'
+'use client'
+
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 interface DashboardHeaderProps {
   user: {
@@ -10,6 +14,20 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
+  const router = useRouter()
+
+  async function handleSignOut() {
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      toast.success('Signed out successfully')
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      toast.error('Error signing out')
+    }
+  }
+
   return (
     <header className="bg-gray-900/50 backdrop-blur-md border-b border-[#17f2e3]/20 sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -38,14 +56,13 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               </Button>
             </Link>
 
-            <form action={async () => {
-              'use server'
-              await signOut()
-            }}>
-              <Button type="submit" variant="outline" className="border-[#17f2e3]/30 text-gray-300 hover:bg-[#17f2e3]/10 hover:text-white">
-                Sign out
-              </Button>
-            </form>
+            <Button 
+              onClick={handleSignOut}
+              variant="outline" 
+              className="border-[#17f2e3]/30 text-gray-300 hover:bg-[#17f2e3]/10 hover:text-white"
+            >
+              Sign out
+            </Button>
           </div>
         </div>
       </div>
