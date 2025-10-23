@@ -4,6 +4,7 @@ import { getEvents } from '../../../../actions/event'
 import EventList from '@/components/event-list'
 import DashboardHeader from '@/components/dashboard-header'
 import { ManualBannerCarousel } from '@/components/manual-banner-carousel'
+import { SearchBar } from '@/components/search-bar'
 
 export default async function DashboardPage({
   searchParams,
@@ -25,23 +26,23 @@ export default async function DashboardPage({
     {
       id: '1',
       title: 'Master Your Game at Dilworth Park',
-      description: 'Register now for the 2025 Summer Basketball League. Open to all skill levels.',
+      description: 'Professional coaching for all ages and skill levels. Join us for expert instruction in Charlottes premier outdoor courts.',
       image_url: '/banners/1.png',
       link_url: null,
     },
     {
       id: '2',
-      title: 'Upcoming Tennis Tournament',
-      description: 'Join us for the Annual City Tennis Championship this weekend.',
+      title: 'Its Tailgate Time! Charlotte FC Edition',
+      description: 'Kick off the weekend with Charlotte Football Club! Food, drinks, games, and pre-game hype. See you in the lot this Saturday!',
       image_url: '/banners/2.png',
       link_url: null,
     },
     {
       id: '3',
-      title: 'New Sports Facilities Open Now',
-      description: 'Check out our brand new state-of-the-art facilities and book your court today!',
-      image_url: '/banners/new-facilities.jpg',
-      link_url: 'https://example.com/facilities',
+      title: 'Transform Your Fitness Journey with Get Fit CLT',
+      description: 'Join Charlottes premier fitness community. Personal training group classes and nutrition coaching designed to help you reach your goals.',
+      image_url: '/banners/3.png',
+      link_url: null,
     },
   ]
 
@@ -50,6 +51,9 @@ export default async function DashboardPage({
       <DashboardHeader user={user} />
       
       <main className="container mx-auto px-4 py-8">
+        {/* Search Bar */}
+        <SearchBar />
+
         {/* Banner Carousel */}
         <ManualBannerCarousel banners={banners} />
 
