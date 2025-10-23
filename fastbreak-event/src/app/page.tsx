@@ -6,19 +6,8 @@ import { Calendar, MapPin, Users, Zap, Trophy, Star } from "lucide-react"
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800">
-      {/* Video Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-        >
-          <source src="/videos/Fastbreak-Background-Video.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-gray-800/90" />
-      </div>
+      {/* Background */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800" />
 
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
@@ -72,7 +61,7 @@ export default function Home() {
               </Link>
               <Link href="/login">
                 <Button size="lg" variant="outline" className="border-[#17f2e3]/30 text-white hover:bg-[#17f2e3]/10 text-lg px-8 py-6">
-                  View Dashboard Demo
+                  Sign In
                 </Button>
               </Link>
             </div>
@@ -95,7 +84,7 @@ export default function Home() {
                 Easy Scheduling
               </h3>
               <p className="text-gray-300">
-                Create and manage sports events with intuitive date and time selection. Never miss a game day.
+                Create and manage sports events with intuitive date and time selection.
               </p>
             </div>
 
@@ -115,52 +104,13 @@ export default function Home() {
             {/* Feature 3 */}
             <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
               <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <Users className="w-8 h-8 text-[#17f2e3]" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Team Collaboration
-              </h3>
-              <p className="text-gray-300">
-                Share events, coordinate with teammates, and keep everyone in the loop effortlessly.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
-              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <Zap className="w-8 h-8 text-[#17f2e3]" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Lightning Fast
-              </h3>
-              <p className="text-gray-300">
-                Built with modern technology for speed and reliability. Access your events anywhere, anytime.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
-              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
                 <Trophy className="w-8 h-8 text-[#17f2e3]" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">
                 Multi-Sport Support
               </h3>
               <p className="text-gray-300">
-                Basketball, tennis, soccer, and more. Manage all your sports in one unified platform.
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="bg-white/5 backdrop-blur-md p-8 rounded-xl border border-[#17f2e3]/20 hover:border-[#17f2e3]/50 transition-all">
-              <div className="bg-[#17f2e3]/20 w-16 h-16 rounded-full flex items-center justify-center mb-6">
-                <Star className="w-8 h-8 text-[#17f2e3]" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Custom Branding
-              </h3>
-              <p className="text-gray-300">
-                Upload event posters, customize details, and make each event uniquely yours.
+                Basketball, tennis, soccer, and more. Manage all your sports in one platform.
               </p>
             </div>
           </div>
@@ -173,7 +123,7 @@ export default function Home() {
               Ready to Get Started?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
-              Join hundreds of sports organizers in Charlotte already using Fastbreak AI
+              Join sports organizers in Charlotte using Fastbreak AI
             </p>
             <Link href="/signup">
               <Button size="lg" className="bg-[#17f2e3] hover:bg-[#13cfc2] text-gray-900 font-bold text-xl px-12 py-7">
