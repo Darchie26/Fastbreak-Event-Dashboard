@@ -1,30 +1,46 @@
-import { redirect } from 'next/navigation'
-import { getUser } from '../../../../actions/auth'
-import { getEvents } from '../../../../actions/event'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import EventList from '@/components/event-list'
 import DashboardHeader from '@/components/dashboard-header'
 import { ManualBannerCarousel } from '@/components/manual-banner-carousel'
 import { SearchBar } from '@/components/search-bar'
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ search?: string; sport?: string }>
-}) {
-  const user = await getUser()
+export default function DashboardPage() {
+  const router = useRouter()
+  const [user, setUser] = useState<any>(null)
+  const [events, setEvents] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  if (!user) {
-    redirect('/login')
-  }
+  useEffect(() => {
+    async function loadUserAndEvents() {
+      const supabase = createClient()
 
-  // Await searchParams
-  const params = await searchParams
-  
-  const result = await getEvents(params.search, params.sport)
+      // Check if user is logged in
+      const { data: { user } } = await supabase.auth.getUser()
 
-  const events = result.success ? result.data : []
+      if (!user) {
+        router.push('/login')
+        return
+      }
 
-  // Manually define your banners here
+      setUser(user)
+
+      // Load events
+      const { data: eventsData } = await supabase
+        .from('events')
+        .select('*, venues(*)')
+        .order('date_time', { ascending: true })
+
+      setEvents(eventsData || [])
+      setLoading(false)
+    }
+
+    loadUserAndEvents()
+  }, [router])
+
   const banners = [
     {
       id: '1',
@@ -49,15 +65,20 @@ export default async function DashboardPage({
     },
   ]
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800">
       <DashboardHeader user={user} />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Search Bar */}
         <SearchBar />
-
-        {/* Banner Carousel */}
         <ManualBannerCarousel banners={banners} />
 
         <div className="mb-8">

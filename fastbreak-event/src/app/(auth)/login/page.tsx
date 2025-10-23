@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -27,7 +28,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { signIn } from '../../../../actions/auth'
 import { signInSchema, SignInFormData } from '@/lib/validations/auth'
 
 export default function LoginPage() {
@@ -46,10 +46,20 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const result = await signIn(data.email, data.password)
+      const supabase = createClient()
 
-      if (!result.success) {
-        toast.error(result.error)
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      })
+
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+
+      if (!authData.user) {
+        toast.error('Invalid credentials')
         return
       }
 
@@ -57,6 +67,7 @@ export default function LoginPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (error) {
+      console.error('Login error:', error)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setIsLoading(false)
@@ -65,27 +76,10 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4">
-      {/* Video Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/Fastbreak-Background-Video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800" />
 
-      {/* Content - Now with transparent/glass effect */}
       <Card className="relative z-10 w-full max-w-md shadow-2xl backdrop-blur-md bg-white/10 border-white/20">
         <CardHeader className="space-y-4">
-          {/* Logo */}
           <div className="flex justify-center mb-2">
             <Image
               src="/FastbreakAI.svg"
@@ -147,7 +141,11 @@ export default function LoginPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white" 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Signing in...' : 'Sign in'}
               </Button>
             </form>
