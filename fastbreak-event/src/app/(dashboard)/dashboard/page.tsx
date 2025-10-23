@@ -9,7 +9,7 @@ import { SearchBar } from '@/components/search-bar'
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { search?: string; sport?: string }
+  searchParams: Promise<{ search?: string; sport?: string }>
 }) {
   const user = await getUser()
 
@@ -17,7 +17,10 @@ export default async function DashboardPage({
     redirect('/login')
   }
 
-  const result = await getEvents(searchParams.search, searchParams.sport)
+  // Await searchParams
+  const params = await searchParams
+  
+  const result = await getEvents(params.search, params.sport)
 
   const events = result.success ? result.data : []
 
