@@ -56,9 +56,6 @@ export default function CreateEventPage() {
       sport_type: '',
       date_time: undefined,
       description: '',
-      poster: undefined,
-      posterFileName: undefined,
-      posterFileType: undefined,
       venues: [{ name: '', address: '', capacity: '' }],
     },
   })
@@ -120,7 +117,7 @@ export default function CreateEventPage() {
 
       if (eventError || !event) {
         console.error('❌ Error creating event:', eventError)
-        toast.error('Failed to create event: ' + eventError?.message)
+        toast.error('Failed to create event: ' + (eventError?.message || 'Unknown error'))
         return
       }
 
@@ -180,7 +177,7 @@ export default function CreateEventPage() {
         console.error('❌ Error creating venues:', venuesError)
         // Rollback - delete event
         await supabase.from('events').delete().eq('id', event.id)
-        if (posterUrl) {
+        if (posterUrl && fileName) {
           await supabase.storage
             .from('Sports Events Management')
             .remove([fileName])
@@ -246,29 +243,19 @@ export default function CreateEventPage() {
                 />
 
                 {/* Event Poster */}
-                <FormField
-                  control={form.control}
-                  name="poster"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white">Event Poster</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          value={posterFile}
-                          onChange={(file) => {
-                            setPosterFile(file)
-                            field.onChange(file ? 'has-file' : undefined)
-                          }}
-                          disabled={isLoading}
-                        />
-                      </FormControl>
-                      <FormDescription className="text-gray-400">
-                        Upload a poster or banner for your event (optional, max 5MB)
-                      </FormDescription>
-                      <FormMessage className="text-red-400" />
-                    </FormItem>
-                  )}
-                />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white">
+                    Event Poster
+                  </label>
+                  <ImageUpload
+                    value={posterFile}
+                    onChange={(file) => setPosterFile(file)}
+                    disabled={isLoading}
+                  />
+                  <p className="text-sm text-gray-400">
+                    Upload a poster or banner for your event (optional, max 5MB)
+                  </p>
+                </div>
 
                 {/* Sport Type */}
                 <FormField
@@ -346,10 +333,10 @@ export default function CreateEventPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <FormLabel className="text-base text-white">Venues *</FormLabel>
-                      <FormDescription className="text-gray-400">
+                      <label className="text-base font-medium text-white">Venues *</label>
+                      <p className="text-sm text-gray-400">
                         Add one or more venues for this event
-                      </FormDescription>
+                      </p>
                     </div>
                     <Button
                       type="button"

@@ -14,9 +14,6 @@ export const createEventSchema = z.object({
   }),
   description: z.string().max(500, 'Description is too long').optional(),
   venues: z.array(venueSchema).min(1, 'At least one venue is required'),
-  poster: z.string().optional(), // Changed from File to string (base64)
-  posterFileName: z.string().optional(), // Store original filename
-  posterFileType: z.string().optional(), // Store file type
 })
 
 export type CreateEventFormData = z.infer<typeof createEventSchema>
