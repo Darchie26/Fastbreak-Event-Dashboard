@@ -76,8 +76,23 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4">
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800" />
+      {/* Video Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/videos/fastbreak-vid.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
 
+      {/* Content */}
       <Card className="relative z-10 w-full max-w-md shadow-2xl backdrop-blur-md bg-white/10 border-white/20">
         <CardHeader className="space-y-4">
           <div className="flex justify-center mb-2">
