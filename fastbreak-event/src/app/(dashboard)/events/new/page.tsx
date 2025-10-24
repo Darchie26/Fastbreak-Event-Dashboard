@@ -38,7 +38,6 @@ import {
 import { DateTimePicker } from '@/components/date-time-picker'
 import { ImageUpload } from '@/components/image-upload'
 
-import { createEventWithoutPoster } from '../../../../../actions/event'
 import { 
   createEventSchema, 
   type CreateEventFormData,
@@ -69,49 +68,24 @@ export default function CreateEventPage() {
     name: 'venues',
   })
 
-  // Upload poster directly to Supabase Storage
-  async function uploadPosterDirectly(
-    file: File, 
-    userId: string, 
-    eventId: string
-  ): Promise<string | null> {
-    try {
-      const supabase = createClient()
-      
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${userId}/${eventId}-${Date.now()}.${fileExt}`
-
-      console.log('📤 Uploading image to storage...')
-
-      const { error: uploadError } = await supabase.storage
-        .from('Sports Events Management')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false,
-        })
-
-      if (uploadError) {
-        console.error('❌ Upload error:', uploadError)
-        throw new Error(uploadError.message)
-      }
-
-      const { data } = supabase.storage
-        .from('Sports Events Management')
-        .getPublicUrl(fileName)
-
-      console.log('✅ Image uploaded successfully')
-      return data.publicUrl
-    } catch (error) {
-      console.error('💥 Upload failed:', error)
-      return null
-    }
-  }
-
   async function onSubmit(data: CreateEventFormData) {
     setIsLoading(true)
 
     try {
       console.log('📝 Starting event creation...')
+      
+      const supabase = createClient()
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        toast.error('You must be logged in to create events')
+        router.push('/login')
+        return
+      }
+
+      console.log('✅ User authenticated:', user.id)
 
       // Validate poster file if exists
       if (posterFile) {
@@ -129,56 +103,94 @@ export default function CreateEventPage() {
         }
       }
 
-      // Step 1: Create event in database (without poster)
-      console.log('📤 Creating event in database...')
-      const result = await createEventWithoutPoster({
-        name: data.name,
-        sport_type: data.sport_type,
-        date_time: data.date_time,
-        description: data.description,
-        venues: data.venues,
-      })
+      // Step 1: Create event in database
+      console.log('📤 Creating event...')
+      const { data: event, error: eventError } = await supabase
+        .from('events')
+        .insert({
+          user_id: user.id,
+          name: data.name,
+          sport_type: data.sport_type,
+          date_time: data.date_time.toISOString(),
+          description: data.description || null,
+          poster_url: null,
+        })
+        .select()
+        .single()
 
-      if (!result.success) {
-        toast.error(result.error)
+      if (eventError || !event) {
+        console.error('❌ Error creating event:', eventError)
+        toast.error('Failed to create event: ' + eventError?.message)
         return
       }
 
-      console.log('✅ Event created with ID:', result.data.id)
+      console.log('✅ Event created with ID:', event.id)
 
       // Step 2: Upload poster if exists
-      if (posterFile && result.data.id) {
+      let posterUrl: string | null = null
+      let fileName = ''
+      if (posterFile) {
         console.log('📸 Uploading poster...')
         
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
-        
-        if (user) {
-          const posterUrl = await uploadPosterDirectly(
-            posterFile, 
-            user.id, 
-            result.data.id
-          )
+        const fileExt = posterFile.name.split('.').pop()
+        fileName = `${user.id}/${event.id}-${Date.now()}.${fileExt}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('Sports Events Management')
+          .upload(fileName, posterFile, {
+            cacheControl: '3600',
+            upsert: false,
+          })
+
+        if (uploadError) {
+          console.error('❌ Poster upload failed:', uploadError)
+          toast.warning('Event created but poster upload failed')
+        } else {
+          const { data: urlData } = supabase.storage
+            .from('Sports Events Management')
+            .getPublicUrl(fileName)
+
+          posterUrl = urlData.publicUrl
+          console.log('✅ Poster uploaded:', posterUrl)
+
+          // Update event with poster URL
+          await supabase
+            .from('events')
+            .update({ poster_url: posterUrl })
+            .eq('id', event.id)
           
-          if (posterUrl) {
-            // Step 3: Update event with poster URL
-            console.log('🔄 Updating event with poster URL...')
-            const { error: updateError } = await supabase
-              .from('events')
-              .update({ poster_url: posterUrl })
-              .eq('id', result.data.id)
-            
-            if (updateError) {
-              console.error('⚠️ Failed to update poster URL:', updateError)
-              toast.warning('Event created but poster upload had issues')
-            } else {
-              console.log('✅ Poster URL updated successfully')
-            }
-          } else {
-            toast.warning('Event created but poster upload failed')
-          }
+          console.log('✅ Event updated with poster URL')
         }
       }
+
+      // Step 3: Create venues
+      console.log('📍 Creating venues...')
+      const venuesData = data.venues.map(venue => ({
+        event_id: event.id,
+        name: venue.name,
+        address: venue.address || null,
+        capacity: venue.capacity || null,
+      }))
+
+      const { error: venuesError } = await supabase
+        .from('venues')
+        .insert(venuesData)
+
+      if (venuesError) {
+        console.error('❌ Error creating venues:', venuesError)
+        // Rollback - delete event
+        await supabase.from('events').delete().eq('id', event.id)
+        if (posterUrl) {
+          await supabase.storage
+            .from('Sports Events Management')
+            .remove([fileName])
+        }
+        toast.error('Failed to create venues: ' + venuesError.message)
+        return
+      }
+
+      console.log('✅ Venues created successfully')
+      console.log('🎉 Event creation complete!')
 
       toast.success('Event created successfully!')
       router.push('/dashboard')
