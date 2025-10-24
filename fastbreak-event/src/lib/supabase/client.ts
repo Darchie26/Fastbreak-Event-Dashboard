@@ -11,7 +11,8 @@ export function createClient() {
     url: supabaseUrl
   })
 
-  if (!supabaseUrl || !supabaseKey || supabaseKey === 'YOUR_ANON_KEY_HERE') {
+  if (!supabaseUrl || !supabaseKey || supabaseKey === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnd3VmcXFxZWhwcWZpaGllcXdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjg1NzcsImV4cCI6MjA3NjY0NDU3N30.JzeBvVSZqo4zCUS0kRzfbl3SRHUTsv7KtW4qlTeddgE'
+) {
     throw new Error(
       'Your project\'s URL and Key are required to create a Supabase client! ' +
       'Check your Supabase project\'s API settings to find these values ' +
