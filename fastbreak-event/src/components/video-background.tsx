@@ -9,7 +9,7 @@ export default function VideoBackground() {
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
         >
-          <source src="/videos/Fastbreak-Background-Video.mp4" type="video/mp4" />
+          <source src="/videos/Fastbreak-vid.mp4" type="video/mp4" />
           {/* Fallback for browsers that don't support video */}
           Your browser does not support the video tag.
         </video>
